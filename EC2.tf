@@ -3,10 +3,10 @@ provider "aws" {
 }
 
 resource "aws_instance" "linux" {
-  ami           = "ami-0cc0a36f626a4fdf5"
-  instance_type = "t3.micro"
+  ami                    = "ami-0cc0a36f626a4fdf5"
+  instance_type          = "t3.micro"
   vpc_security_group_ids = [aws_security_group.linux_web.id]
-  user_data = <<EOF
+  user_data              = <<EOF
 
 EOF
   tags = {
@@ -24,20 +24,20 @@ resource "aws_security_group" "linux_web" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = [0.0.0.0/0]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [0.0.0.0/0]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
