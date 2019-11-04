@@ -14,6 +14,12 @@ resource "aws_instance" "Ubuntu_18" {
     Project = "Test_terraform"
   }
 
+  connection {
+    type = "ssh"
+    user = "root"
+    private_key = "${file("~/.ssh/id_rsa")}"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "sudo apt-get update",
