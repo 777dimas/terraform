@@ -3,10 +3,10 @@ provider "aws" {
 }
 
 resource "aws_instance" "Ubuntu_18" {
-  ami           = "ami-0cc0a36f626a4fdf5"
-  instance_type = "t3.micro"
+  ami                    = "ami-0cc0a36f626a4fdf5"
+  instance_type          = "t3.micro"
   vpc_security_group_ids = [aws_security_group.linux_web.id]
-  user_data = file("docker.sh")
+  user_data              = file("docker.sh")
 
   tags = {
     Name    = "Ubuntu server"
