@@ -2,21 +2,38 @@ provider "aws" {
   region = "eu-central-1"
 }
 
-resource "aws_instance" "Ubuntu_18" {
+variable "key_name" {}
+
+resource "tls_private_key" "myubuntukey" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_key_pair" "generated_key" {
+  key_name   = "var.key_name"
+  public_key = "tls_private_key.myubuntukey.public_key_openssh"
+}
+
+output "key" {
+  value = "tls_private_key.myubuntukey.public_key_openssh"
+}
+
+resource "aws_instance" "Ubuntu_docker_jenkins" {
   ami                    = "ami-0cc0a36f626a4fdf5"
   instance_type          = "t3.micro"
+  key_name               = "aws_key_pair.generated_key.key_name"
   vpc_security_group_ids = [aws_security_group.linux_web.id]
   user_data              = file("docker.sh")
 
   tags = {
     Name    = "Ubuntu server"
-    Project = "Test_terraform"
+    Project = "Terraform"
   }
 }
 
 resource "aws_security_group" "linux_web" {
-  name        = "Web Security Group"
-  description = "Allow http_ssh inbound traffic"
+  name        = "Security Group"
+  description = "Allow inbound traffic"
 
   ingress {
     from_port   = 22
