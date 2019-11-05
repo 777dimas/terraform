@@ -5,33 +5,12 @@ provider "aws" {
 resource "aws_instance" "Ubuntu_18" {
   ami           = "ami-0cc0a36f626a4fdf5"
   instance_type = "t3.micro"
-  vpc_security_group_ids = [
-  aws_security_group.linux_web.id]
-  user_data = file("script.sh")
+  vpc_security_group_ids = [aws_security_group.linux_web.id]
+  user_data = file("docker.sh")
 
   tags = {
     Name    = "Ubuntu server"
     Project = "Test_terraform"
-  }
-
-  connection {
-    type = "ssh"
-    user = "root"
-    private_key = "${file("~/.ssh/id_rsa")}"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update",
-      "sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common",
-      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
-      "sudo add-apt-repository deb https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable",
-      "sudo apt-get update",
-      "sudo apt install docker-ce docker-ce-cli containerd.io",
-      "sudo systemctl enable docker",
-      "sudo systemctl start docker",
-      "sudo docker run -d -p 8888:8080 --restart=always jenkins/jenjins:lts"
-    ]
   }
 }
 
@@ -47,8 +26,8 @@ resource "aws_security_group" "linux_web" {
   }
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 8888
+    to_port     = 8888
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
