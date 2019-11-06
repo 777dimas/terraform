@@ -2,26 +2,10 @@ provider "aws" {
   region = "eu-central-1"
 }
 
-variable "key_name" {}
-
-resource "tls_private_key" "myubuntukey" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "aws_key_pair" "generated_key" {
-  key_name   = "var.key_name"
-  public_key = "tls_private_key.myubuntukey.public_key_openssh"
-}
-
-output "key" {
-  value = "tls_private_key.myubuntukey.public_key_openssh"
-}
-
 resource "aws_instance" "Ubuntu_docker_jenkins" {
   ami                    = "ami-0cc0a36f626a4fdf5"
   instance_type          = "t3.micro"
-  key_name               = "aws_key_pair.generated_key.key_name"
+  key_name               = "myubuntukey"
   vpc_security_group_ids = [aws_security_group.linux_web.id]
   user_data              = file("docker.sh")
 
