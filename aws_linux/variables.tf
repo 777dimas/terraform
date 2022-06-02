@@ -13,13 +13,13 @@ variable "instance_type" {
 variable "allow_ports" {
     description = "List of allow open ports"
     type        = list
-    default     = ["22"]
+    default     = ["22"] // One or several ports
 }
 
 variable "cidr_blocks" {
     description = "List of allow ip's"
     type        = list
-    default     = ["195.64.234.134/32","116.203.53.241/32" ]
+    default     = ["0.0.0.0/0" ] // One or several ip's
 }
 
 variable "common_tags" {
